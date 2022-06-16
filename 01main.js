@@ -8,31 +8,33 @@ function setup() {
   for (let i = 0; i < numSegments; i++) {
     xCor.push(xStart + i * diff);
     yCor.push(yStart);
+    console.log(xCor, yCor);
   }
 
   // scene 16
   mic = new p5.AudioIn();
-  mic.start();
 
   // 열쇠 애니메이션 자리는 여기!
   key_video = createVideo(["assets/key_ani.mp4"]);
   key_video.hide();
+
+  titlesong.play();
 }
 
 function draw() {
   // console.log("X:" + mouseX + "Y:" + mouseY);
-  console.log("scene" + scene + "text_index" + text_index);
+  // console.log("scene" + scene + "text_index" + text_index);
   // console.log(selectionOn);
   switch (scene) {
     case 0:
       bI_0.display();
       titlestartbutton.display();
-      //titlesong.play();
+
       break;
     case 1:
       background(0);
       textbox.display();
-      //titlesong.stop();
+
       break;
     case 2:
       bI_2.display();
@@ -82,15 +84,44 @@ function draw() {
         fill(255, 255 - (scene5_delta_time / 3000) * 255);
         // console.log(255 - (scene5_delta_time / 3000) * 255);
         rect(0, 0, 1920, 1080);
+      } else {
+        if (scene5_end_time != 0) {
+          rectMode(CORNER);
+          fill(0, ((scene5_now_time - scene5_end_time) / 3000) * 255);
+          // console.log(((scene5_now_time - scene5_end_time) / 3000) * 255);
+          rect(0, 0, 1920, 1080);
+          if (scene5_now_time > scene5_end_time + 3000) {
+            // console.log(scene5_end_time - scene5_now_time);
+            scene++;
+            text_index = 0;
+            textboxOn = false;
+          }
+        }
       }
       break;
     case 6:
+      scene6_now_time = millis();
       bI_6.display();
+
+      if (scene6_now_time > scene5_now_time + 3000) {
+        // console.log("a");
+      } else {
+        rectMode(CORNER);
+        fill(0, 255 - ((scene6_now_time - scene5_now_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+      }
       break;
     case 7:
+      scene7_now_time = millis();
       bI_7.display();
       crow.display(1400, 570, 1100, 700);
       textbox.display();
+
+      if (scene7_now_time <= scene6_end_time + 3000) {
+        rectMode(CORNER);
+        fill(0, 255 - ((scene7_now_time - scene6_end_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+      }
       break;
     case 8:
       worldmap.display();
@@ -160,17 +191,23 @@ function draw() {
             // stroke(31, 28, 66);
 
             stroke(127, 205, 173, (i / numSegments) * 255);
-            strokeWeight((i / numSegments) * 50 + 20);
-            line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
+            strokeWeight((i / numSegments) * gridSize + 20);
+            line(
+              xCor[i] + gridSize / 2,
+              yCor[i],
+              xCor[i + 1] + gridSize / 2,
+              yCor[i + 1]
+            );
           }
           imageMode(CENTER);
           image(
             head_image,
-            xCor[xCor.length - 1],
+            xCor[xCor.length - 1] + gridSize / 2,
             yCor[yCor.length - 1],
-            50,
-            50
+            gridSize,
+            gridSize
           );
+          console.log(xCor, yCor);
 
           updateSnakeCoordinates();
           checkGameStatus();
@@ -212,17 +249,7 @@ function draw() {
           foods[i].display(210 * ((i - 1) / 2) + 1240, 500 + 210, 210);
         }
       }
-      if (dragon_hate) {
-        textSize(30);
-        textAlign(CENTER);
-        fill(255);
-        textStyle(NORMAL);
-        textFont(font1);
-        rectMode(CORNER);
-        stroke(0);
-        strokeWeight(0);
-        text("엣퉤퉤 이게 뭐야", 300, 300, 300, 100);
-      }
+
       // key UI
       key1.display(90, 90);
       key2.display(190, 90);
@@ -242,7 +269,7 @@ function draw() {
     case 13:
       bI_12.display();
       lock.display();
-      if (millis() <= key_video_startTime + 3000) {
+      if (millis() <= key_video_startTime + 1650) {
         imageMode(CENTER);
         image(key_video, 960, 540);
       } else {
@@ -252,23 +279,40 @@ function draw() {
       // bI_13.display();
       break;
     case 14:
+      scene14_now_time = millis();
       bI_14.display();
       lock.display();
       textbox.display();
-      // lock.dis
       keycursor.display();
+
+      if (scene14_last_time != 0) {
+        rectMode(CORNER);
+        fill(0, ((scene14_now_time - scene14_last_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+        if (scene14_now_time > scene14_last_time + 3000) {
+          scene++;
+          text_index = 0;
+          textboxOn = true;
+        }
+      }
       break;
     case 15:
+      scene15_now_time = millis();
       cursor();
       bI_15.display();
       crow.display(1400, 570, 1100, 700);
       textbox.display();
+      if (scene15_now_time <= scene14_now_time + 3000) {
+        rectMode(CORNER);
+        fill(0, 255 - ((scene15_now_time - scene14_now_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+      }
 
       break;
     case 16:
       bI_16.display();
       // final stage
-      // openingsong.stop();
+
       sleepprincess.display();
       checkmic();
       textbox.display();
@@ -284,7 +328,9 @@ function draw() {
       break;
     case 18:
       // ending 1
-      // endingsong.stop();
+
+      scene18_now_time = millis();
+
       if (secondending == true) {
         bI_24.display();
       } else {
@@ -292,22 +338,49 @@ function draw() {
       }
       crow.display(1400, 570, 1100, 700);
       textbox.display();
+      if (scene18_end_time != 0) {
+        rectMode(CORNER);
+        fill(0, ((scene18_now_time - scene18_end_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+        if (scene18_now_time > scene18_end_time + 3000) {
+          scene++;
+          text_index = 0;
+        }
+      }
+
       break;
     case 19:
       // ending 1-1
+      scene19_now_time = millis();
       background(0);
       ending_book.display();
       webcam.display(825, 595, 260);
       horn.display();
       textbox.display();
+
+      if (scene19_now_time <= scene18_now_time + 3000) {
+        rectMode(CORNER);
+        fill(0, 255 - ((scene19_now_time - scene18_now_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+      }
       break;
     case 20:
       // ending 1-2
-      bI_20.display();
+      if (millis() <= ending_book_clicked_time + 3000) {
+        bI_20.display();
+        // console.log(millis());
+      } else {
+        scene++;
+      }
       break;
     case 21:
       // ending 1-3
-      bI_21.display();
+      if (millis() <= ending_book_clicked_time + 6000) {
+        bI_21.display();
+        // console.log(millis());
+      } else {
+        scene++;
+      }
       break;
     case 22:
       // ending 1-4
@@ -315,16 +388,26 @@ function draw() {
       break;
     case 23:
       // ending 2
+      scene23_now_time = millis();
       bI_18.display();
+      crow.display(1400, 570, 1100, 700);
       textbox.display();
+
       break;
     case 24:
+      scene24_now_time = millis();
       bI_24.display();
       prince.display();
+      six.display();
       wedprincess.display();
-      crow.display(1150, 570, 800, 600);
+      crow.display(1400, 570, 1100, 700);
       textbox.display();
       selectbox0.display();
+      if (scene24_now_time <= scene23_now_time + 3000) {
+        rectMode(CORNER);
+        fill(0, 255 - ((scene24_now_time - scene23_now_time) / 3000) * 255);
+        rect(0, 0, 1920, 1080);
+      }
       break;
   }
 }
@@ -339,7 +422,7 @@ function keyPressed() {
   // 1을 눌러 초기화(타이틀로 돌아가기) -- 포스트잇
   if (keyCode == 49) {
     // 각종 변수 다 초기화 시키기
-    scene = 0;
+    BackToTitle();
   }
   //stage 2
   switch (keyCode) {
@@ -405,20 +488,32 @@ function mouseClicked() {
     case 5:
       if (scene5_delta_time <= 3000) {
       } else {
-        textbox.click();
+        let phornOn = hornOn;
         book.click();
-        webcam.click();
+        if (phornOn == hornOn) {
+          textbox.click();
+        }
       }
       break;
     case 6:
       //booksound.play();
       //openingsong.play();
-      scene++;
-      textboxOn = true;
+      if (scene6_now_time > scene5_now_time + 3000) {
+        scene++;
+        textboxOn = true;
+        scene6_end_time = millis();
+      }
       break;
     case 7:
-      textbox.click();
-      crow.click();
+      if (scene7_now_time <= scene6_end_time + 3000) {
+      } else {
+        let pcrowon = crowOn;
+        textbox.click();
+        if (pcrowon == crowOn) {
+          crow.click();
+        }
+      }
+
       break;
     case 8:
       mark1.click();
@@ -427,8 +522,6 @@ function mouseClicked() {
       mark4.click();
       break;
     case 9:
-      //openingsong.stop();
-      //gamesong.play();
       GITB_0.clicked();
       cleartext.clicked();
       GOTB_0.clicked();
@@ -459,9 +552,6 @@ function mouseClicked() {
 
       break;
     case 13:
-      // gamesong.stop();
-      //openingsong.play();
-
       break;
     case 14:
       textbox.click();
@@ -469,7 +559,13 @@ function mouseClicked() {
       crowOn = false;
       break;
     case 15:
-      textbox.click();
+      if (scene15_now_time > scene14_now_time + 3000) {
+        textbox.click();
+      }
+      if (!micOn) {
+        mic.start();
+        micOn = true;
+      }
       break;
     case 16:
       if (sleep_stage == 3) {
@@ -479,8 +575,6 @@ function mouseClicked() {
       textbox.click();
       break;
     case 17:
-      //openingsong.stop();
-      //endingsong.play();
       textbox.click();
       selectbox0.click();
       selectbox1.click();
@@ -490,31 +584,35 @@ function mouseClicked() {
       textboxOn = true;
       break;
     case 19:
-      //endingsong.stop();
-      //endingsong2.play();
-      textbox.click();
-      ending_book.click();
-      webcam.click();
+      if (scene19_now_time > scene18_now_time + 3000) {
+        let phornOn = hornOn;
+        ending_book.click();
+        if (phornOn == hornOn) {
+          textbox.click();
+        }
+      }
+
       break;
     case 20:
-      scene++;
+      // scene++;
       break;
     case 21:
-      scene++;
+      // scene++;
       break;
     case 22:
-      scene = 0;
-      // 기타 변수들 초기화!!
+      // 클릭하면 기타 변수들 초기화!!
+      BackToTitle();
       break;
     case 23:
-      //endingsong2.play();
       textbox.click();
       break;
     case 24:
-      textbox.click();
-      selectbox0.click();
-      secondending = true;
-      //endingsong2.stop();
+      if (scene24_now_time > scene23_now_time + 3000) {
+        textbox.click();
+        selectbox0.click();
+        secondending = true;
+      }
+
       break;
   }
 }
