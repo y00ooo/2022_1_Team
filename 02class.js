@@ -14,17 +14,32 @@ class titleStartButton {
   insertImage(path) {
     this.image = loadImage(path);
   }
-
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
   display() {
     this.x = 980;
     this.y = 880;
     this.w = 420;
     this.h = 330;
-
-    imageMode(CENTER);
-    image(this.image, this.x, this.y, this.w, this.h);
+    if (this.over()) {
+      imageMode(CENTER);
+      image(this.overimage, this.x, this.y, this.w + 50, this.h + 50);
+    } else {
+      imageMode(CENTER);
+      image(this.image, this.x, this.y, this.w, this.h);
+    }
   }
-
+  over() {
+    if (
+      mouseX >= this.x - this.w / 2 &&
+      mouseX <= this.x + this.w / 2 &&
+      mouseY >= this.y - this.h / 2 &&
+      mouseY <= this.y + this.h / 2
+    ) {
+      return true;
+    }
+  }
   click() {
     if (
       mouseX >= this.x - this.w / 2 &&
@@ -34,6 +49,8 @@ class titleStartButton {
     ) {
       scene++;
       textboxOn = true;
+      titlesong.stop();
+      openingsong.play();
     }
   }
 }
@@ -65,6 +82,17 @@ class textBox {
       rectMode(CORNER);
       stroke(0);
       strokeWeight(0);
+
+      if ("effect" in this.text) {
+        switch (this.text.effect) {
+          case "bold":
+            strokeWeight(2);
+            break;
+          case "red":
+            fill(255, 40, 40);
+            break;
+        }
+      }
       text(this.text.text, 545, 920, 840, this.h);
 
       textAlign(CENTER);
@@ -79,32 +107,60 @@ class textBox {
     }
   }
   click() {
-    if (textboxOn & (texts[scene] != 0)) {
+    if (textboxOn && texts[scene] != 0) {
       if (
         mouseX >= this.x - this.w / 2 &&
         mouseX <= this.x + this.w / 2 &&
         mouseY >= this.y - this.h / 2 &&
         mouseY <= this.y + this.h / 2
       ) {
+        this.text = texts[scene][text_index];
         // console.log("textclicked");
         switch (this.text.click_reaction) {
           case "next":
             text_index++;
-            // console.log("text next");
+            console.log(" 01 text next");
             break;
           case "textoff":
             if (text_index == texts[scene].length - 1) {
               console.log("textoff");
-              scene++;
-              text_index = 0;
-              textboxOn = false;
+              if (scene == 5) {
+                if (scene5_end_time == 0) {
+                  scene5_end_time = millis();
+                }
+              } else {
+                if (scene == 18) {
+                  if (scene18_end_time == 0) {
+                    scene18_end_time = millis();
+                  }
+                } else {
+                  scene++;
+                  text_index = 0;
+                  textboxOn = false;
+                }
+              }
+
+              if (scene == 8) {
+                openingsong.stop();
+                gamesong.play();
+              }
               if (scene == 19) {
                 hornOn = true;
+                webcamOn = true;
+              }
+              if (scene == 20) {
+                ending_book_clicked_time = millis();
+                // console.log(ending_book_clicked_time);
               }
             } else {
               textboxOn = false;
               text_index++;
               console.log("textbox clicked " + text_index);
+
+              if (scene == 5 && text_index == 4) {
+                textboxOn = true;
+                text_index--;
+              }
               if (scene == 17 || scene == 24) {
                 selectionOn = true;
               }
@@ -114,24 +170,37 @@ class textBox {
                 textboxOn = true;
                 text_index = 0;
                 scene++;
+                crowOn = false;
+                if (scene == 23) {
+                  scene23_now_time = millis();
+                }
               }
             }
             break;
           case "crowon":
+            console.log("crow on text", text_index);
             crowOn = true;
-            text_index++;
+
+            console.log("crow on click");
             if (scene == 15 || scene == 17 || scene == 24) {
               textboxOn = true;
               if (scene == 17 || scene == 24) {
                 princessOn = false;
               }
             } else {
+              // console.log("textbox off");
+              // console.log(textboxOn);
               textboxOn = false;
+              // console.log(textboxOn);
+            }
+            if (scene != 7) {
+              text_index++;
             }
 
             break;
           case "princeon":
             console.log("textclicked");
+            sixOn = false;
             princeOn = true;
             text_index++;
             break;
@@ -142,6 +211,11 @@ class textBox {
             princessOn = true;
             text_index++;
             break;
+          case "sixon":
+            sixOn = true;
+            text_index++;
+            break;
+            
         }
       }
     }
@@ -153,6 +227,9 @@ class Book {
   insertImage(path) {
     this.image = loadImage(path);
   }
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
   display() {
     this.x = 960;
     this.y = 480;
@@ -160,8 +237,25 @@ class Book {
     this.h = 800;
 
     if (bookOn) {
-      imageMode(CENTER);
-      image(this.image, this.x, this.y + 100, this.w, this.h);
+      if (this.over()) {
+        imageMode(CENTER);
+        image(this.overimage, this.x, this.y + 100, this.w + 25, this.h + 25);
+      } else {
+        imageMode(CENTER);
+        image(this.image, this.x, this.y + 100, this.w, this.h);
+      }
+    }
+  }
+  over() {
+    if (bookOn) {
+      if (
+        mouseX >= this.x - this.w / 2 &&
+        mouseX <= this.x + this.w / 2 &&
+        mouseY >= this.y + 100 - this.h / 2 &&
+        mouseY <= this.y + 100 + this.h / 2
+      ) {
+        return true;
+      }
     }
   }
   click() {
@@ -169,17 +263,17 @@ class Book {
       if (
         mouseX >= this.x - this.w / 2 &&
         mouseX <= this.x + this.w / 2 &&
-        mouseY >= this.y - this.h / 2 &&
-        mouseY <= this.y + this.h / 2
+        mouseY >= this.y + 100 - this.h / 2 &&
+        mouseY <= this.y + 100 + this.h / 2
       ) {
         if (scene == 5 && text_index == 3 && textboxOn == false) {
           scene5_book_clicked++;
-          if (scene5_book_clicked >= 2) {
-            webcamOn = true;
-          }
-        }
-        if (scene == 19 && text_index == 2) {
           webcamOn = true;
+          console.log(scene5_book_clicked);
+          if (scene5_book_clicked == 1) {
+            hornOn = true;
+            textboxOn = true;
+          }
         }
       }
     }
@@ -191,6 +285,9 @@ class EndingBook {
   insertImage(path) {
     this.image = loadImage(path);
   }
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
   display() {
     this.x = 960;
     this.y = 540;
@@ -198,8 +295,25 @@ class EndingBook {
     this.h = 1080;
 
     if (bookOn) {
-      imageMode(CENTER);
-      image(this.image, this.x, this.y, this.w, this.h);
+      if (this.over()) {
+        imageMode(CENTER);
+        image(this.overimage, this.x, this.y, this.w + 25, this.h + 25);
+      } else {
+        imageMode(CENTER);
+        image(this.image, this.x, this.y, this.w, this.h);
+      }
+    }
+  }
+  over() {
+    if (bookOn) {
+      if (
+        mouseX >= 960 - 275 &&
+        mouseX <= 960 + 275 &&
+        mouseY >= 540 - 400 &&
+        mouseY <= 540 + 400
+      ) {
+        return true;
+      }
     }
   }
   click() {
@@ -210,15 +324,10 @@ class EndingBook {
         mouseY >= 540 - 400 &&
         mouseY <= 540 + 400
       ) {
-        if (scene == 5 && text_index == 3 && textboxOn == false) {
-          scene5_book_clicked++;
-          if (scene5_book_clicked >= 2) {
-            webcamOn = true;
-          }
-        }
-        if (scene == 19 && text_index == 2) {
+        if (scene == 19 && text_index == 2 && textboxOn == false) {
           console.log("a");
-          webcamOn = true;
+          hornOn = false;
+          textboxOn = true;
         }
       }
     }
@@ -243,36 +352,6 @@ class webCam {
       imageMode(CORNER);
       image(this.capture, 0, 0, this.w, this.h);
       pop();
-    }
-  }
-  click() {
-    if (webcamOn) {
-      if (
-        mouseX >= this.x &&
-        mouseX <= this.x + this.w &&
-        mouseY >= this.y &&
-        mouseY <= this.y + this.h
-      ) {
-        if (scene == 5) {
-          hornOn = true;
-        }
-        if (scene == 19) {
-          this.webcamclicked++;
-
-          // 여기도 똑같은 문제
-          switch (this.webcamclicked) {
-            case 2:
-              hornOn = false;
-              break;
-            case 3:
-              scene++;
-              break;
-          }
-        } else {
-          // 이거 왜 이렇게 한건지 기억 안남
-          textboxOn = true;
-        }
-      }
     }
   }
 }
@@ -344,17 +423,36 @@ class Crow {
   insertImage(path) {
     this.image = loadImage(path);
   }
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
   display(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     if (crowOn) {
-      imageMode(CENTER);
-      image(this.image, this.x, this.y, this.w, this.h);
+      if (this.over()) {
+        imageMode(CENTER);
+        image(this.overimage, this.x, this.y, this.w, this.h);
+      } else {
+        imageMode(CENTER);
+        image(this.image, this.x, this.y, this.w, this.h);
+      }
     }
   }
-
+  over() {
+    if (
+      mouseX >= this.x - this.w / 2 &&
+      mouseX <= this.x + this.w / 2 &&
+      mouseY >= this.y - this.h / 2 &&
+      mouseY <= this.y + this.h / 2
+    ) {
+      if (crowovercheck) {
+        return true;
+      }
+    }
+  }
   click() {
     if (crowOn) {
       if (
@@ -363,24 +461,23 @@ class Crow {
         mouseY >= this.y - this.h / 2 &&
         mouseY <= this.y + this.h / 2
       ) {
-        if (scene == 7) {
+        crowovercheck = false;
+        if (scene == 7 && text_index == 0 && textboxOn == false) {
           // 일단 scene 7
           textboxOn = true;
+          text_index++;
+
+          console.log("crow clicked and ", text_index);
+          console.log("2 crow clicked!!!!");
         }
       }
     }
   }
 }
 
-class Map {
-  constructor() {}
-  display() {
-    imageMode(CORNER);
-    image(map_images[stage], 0, 0, 1920, 1080);
-  }
-}
 class Mark {
   constructor(stage) {
+    this.overed = false;
     this.stage = stage;
     // this.stage_done = false;
 
@@ -414,6 +511,15 @@ class Mark {
     // fill(255, 100);
     ellipse(this.x, this.y, 380, 380);
   }
+  over() {
+    if (stage == this.stage) {
+      if (dist(mouseX, mouseY, this.x, this.y) <= 190) {
+        this.overed = true;
+        console.log("overed");
+        return true;
+      }
+    }
+  }
   click() {
     if (stage == this.stage) {
       if (dist(mouseX, mouseY, this.x, this.y) <= 190) {
@@ -421,26 +527,58 @@ class Mark {
 
         if (scene == 12) {
           textboxOn = true;
+          gamesong.stop();
+          endingsong.play();
         }
         //   this.stage_done = true;
       }
     }
   }
 }
+class Map {
+  constructor() {}
+  display() {
+    if (mark1.over() || mark2.over() || mark3.over() || mark4.over()) {
+      if (mark1.over()) {
+        imageMode(CORNER);
+        image(map_over_images[0], 0, 0, 1920, 1080);
+      } else if (mark2.over()) {
+        imageMode(CORNER);
+        image(map_over_images[1], 0, 0, 1920, 1080);
+      } else if (mark3.over()) {
+        imageMode(CORNER);
+        image(map_over_images[2], 0, 0, 1920, 1080);
+      } else {
+        imageMode(CORNER);
+        image(map_over_images[3], 0, 0, 1920, 1080);
+      }
+    } else {
+      imageMode(CORNER);
+      image(map_images[stage], 0, 0, 1920, 1080);
+    }
+  }
+}
+
 class Key {
   constructor(stage) {
     this.stage = stage;
     this.stage_done = false;
   }
   display(x, y) {
+    noStroke();
+    fill(0, 100);
+    rectMode(CENTER);
+    rect(x, y, 100, 100);
     if (this.stage_done) {
+      imageMode(CENTER);
       image(key_images[this.stage * 2], x, y, 100, 100);
     } else {
+      imageMode(CENTER);
       image(key_images[this.stage * 2 + 1], x, y, 100, 100);
     }
   }
-  set() {
-    this.stage_done = true;
+  set(condition) {
+    this.stage_done = condition;
   }
 }
 
@@ -696,8 +834,25 @@ class gameoutroTextBox {
       text(this.text[0], 190, 500, this.w, this.h);
 
       // key
-      imageMode(CENTER);
-      image(key_images[this.stage * 2], this.keyx, this.keyy, 300, 300);
+      if (this.over()) {
+        imageMode(CENTER);
+        image(key_over_images[this.stage], this.keyx, this.keyy, 300, 300);
+      } else {
+        imageMode(CENTER);
+        image(key_images[this.stage * 2], this.keyx, this.keyy, 300, 300);
+      }
+    }
+  }
+  over() {
+    if (GO_clicked == false && cleartext_clicked == true) {
+      if (
+        mouseX >= this.keyx - 150 &&
+        mouseX <= this.keyx + 150 &&
+        mouseY >= this.keyy - 150 &&
+        mouseY <= this.keyy + 150
+      ) {
+        return true;
+      }
     }
   }
   clicked() {
@@ -708,7 +863,7 @@ class gameoutroTextBox {
         mouseY >= this.keyy - 150 &&
         mouseY <= this.keyy + 150
       ) {
-        keys[this.stage].set();
+        keys[this.stage].set(true);
 
         GO_clicked = true;
         scene = 8;
@@ -735,8 +890,8 @@ class scoreText {
 }
 
 function updateFruitCoordinates() {
-  xFruit = floor(random(10, (1920 - 100) / 50)) * 50;
-  yFruit = floor(random(10, (1080 - 100) / 50)) * 50;
+  xFruit = floor(random(10, (1920 - 100) / gridSize)) * gridSize;
+  yFruit = floor(random(10, (1080 - 100) / gridSize)) * gridSize;
 }
 function updateSnakeCoordinates() {
   for (let i = 0; i < numSegments - 1; i++) {
@@ -765,7 +920,7 @@ function updateSnakeCoordinates() {
 
 function checkGameStatus() {
   if (
-    xCor[xCor.length - 1] > width ||
+    xCor[xCor.length - 1] > width - gridSize / 2 ||
     xCor[xCor.length - 1] < 0 ||
     yCor[yCor.length - 1] > height ||
     yCor[yCor.length - 1] < 0 ||
@@ -795,7 +950,8 @@ function checkSnakeCollision() {
 }
 
 function checkForFruit() {
-  image(rock_image, xFruit, yFruit, 50, 50);
+  image(rock_image, xFruit + gridSize / 2, yFruit, gridSize, gridSize);
+  // console.log(xCor[xCor.length - 1], xFruit, yCor[yCor.length - 1], yFruit);
   // stroke(0);
   // strokeWeight(25);
   // point(xFruit, yFruit);
@@ -844,6 +1000,21 @@ class DragonTextBox {
     stroke(0);
     strokeWeight(0);
     text(this.text, x - 198, y - 32, 500, h);
+
+    if (dragon_hate == true) {
+      imageMode(CENTER);
+      image(this.image, x + 43, y - 200, 550, 200);
+
+      textSize(30);
+      textAlign(CENTER);
+      fill(255);
+      textStyle(NORMAL);
+      textFont(font1);
+      rectMode(CENTER);
+      stroke(0);
+      strokeWeight(0);
+      text("엣퉤퉤 이게 뭐야", x + 43, y - 200, 550, 50);
+    }
   }
 }
 
@@ -871,16 +1042,45 @@ class FoodButton {
     this.h =
       (food_images[this.food_num].height / food_images[this.food_num].width) *
       210;
-    imageMode(CORNER);
-    image(food_images[this.food_num], this.x - 50, this.y, this.w, this.h);
+
+    if (this.over()) {
+      imageMode(CORNER);
+      image(
+        food_images[this.food_num],
+        this.x - 50,
+        this.y,
+        this.w + 25,
+        this.h + 25
+      );
+    } else {
+      imageMode(CORNER);
+      image(food_images[this.food_num], this.x - 50, this.y, this.w, this.h);
+    }
+
+    // fill(this.food_num * 10, 255 - this.food_num * 10);
+    // rectMode(CORNER);
+
+    // rect(this.x - 50, this.y, 210, 182);
+  }
+  over() {
+    if (stage == this.stage && GI_clicked == true && dragon_done == false) {
+      if (
+        mouseX >= this.x - 50 &&
+        mouseX <= this.x - 50 + 210 &&
+        mouseY >= this.y &&
+        mouseY <= this.y + 182
+      ) {
+        return true;
+      }
+    }
   }
   clicked() {
     if (stage == this.stage && GI_clicked == true && dragon_done == false) {
       if (
-        mouseX >= this.x &&
-        mouseX <= this.x + this.w &&
+        mouseX >= this.x - 50 &&
+        mouseX <= this.x - 50 + 210 &&
         mouseY >= this.y &&
-        mouseY <= this.y + this.h
+        mouseY <= this.y + 182
       ) {
         if (this.food_num == right_food[dragon_eat]) {
           dragon_eat++;
@@ -914,9 +1114,29 @@ class Lock {
   insertImage(path) {
     this.image = loadImage(path);
   }
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
   display() {
-    imageMode(CENTER);
-    image(this.image, this.x, this.y, this.w, this.h);
+    if (this.over()) {
+      imageMode(CENTER);
+      image(this.overimage, this.x, this.y, this.w, this.h);
+    } else {
+      imageMode(CENTER);
+      image(this.image, this.x, this.y, this.w, this.h);
+    }
+  }
+  over() {
+    if (
+      mouseX >= this.x - this.w / 2 &&
+      mouseX <= this.x + this.w / 2 &&
+      mouseY >= this.y - this.h / 2 &&
+      mouseY <= this.y + this.h / 2
+    ) {
+      if (textboxOn == false) {
+        return true;
+      }
+    }
   }
   click() {
     if (
@@ -926,9 +1146,12 @@ class Lock {
       mouseY <= this.y + this.h / 2
     ) {
       if (textboxOn == false) {
-        scene++;
-        text_index = 0;
-        textboxOn = true;
+        if (scene14_last_time == 0) {
+          scene14_last_time = millis();
+        }
+        // scene++;
+        // text_index = 0;
+        // textboxOn = true;
       }
     }
   }
@@ -973,8 +1196,15 @@ class Clap {
     this.image = loadImage(path);
   }
   display() {
-    imageMode(CENTER);
-    image(this.image, 1680, mic_height - 75, 150, 150);
+    if (clapOn) {
+      imageMode(CENTER);
+      image(this.image, 1680, 540, mic_w, mic_w);
+      noFill();
+      stroke(10, 255, 10);
+      strokeWeight(4);
+      ellipseMode(CENTER);
+      ellipse(1680, 540, 250, 250);
+    }
   }
 }
 
@@ -982,12 +1212,12 @@ function checkmic() {
   let vol = mic.getLevel();
   console.log("get mic level");
   // test 용
-  fill(127);
-  stroke(0);
-  // 마이크 소리의 볼륨에 따라 떠있는 높이가 변하는 타원 그리기
-  mic_height = map(vol, 0, 1, 1080, 0);
 
-  if (mic_height <= 550 && mic_height >= 350) {
+  // 마이크 소리의 볼륨에 따라 떠있는 높이가 변하는 타원 그리기
+
+  mic_w = map(vol, 0, 1, 100, 1000);
+
+  if (mic_w >= 250) {
     mic_overed++;
     console.log(mic_overed);
   }
@@ -999,6 +1229,7 @@ function checkmic() {
   } else if (mic_overed == 25) {
     sleep_stage = 3;
     textboxOn = true;
+    clapOn = false;
   } else {
     // pass
   }
@@ -1017,12 +1248,32 @@ class selectBox {
   insertImage(path) {
     this.image = loadImage(path);
   }
+  insertOverImage(path) {
+    this.overimage = loadImage(path);
+  }
 
   display() {
     if (selectionOn) {
       // console.log("selectionOn은" + selectionOn);
-      imageMode(CENTER);
-      image(this.image, this.x, this.y, 600, 300);
+      if (this.over()) {
+        imageMode(CENTER);
+        image(this.overimage, this.x, this.y, 600, 300);
+      } else {
+        imageMode(CENTER);
+        image(this.image, this.x, this.y, 600, 300);
+      }
+    }
+  }
+  over() {
+    if (selectionOn) {
+      if (
+        mouseX >= this.x - 300 &&
+        mouseX <= this.x + 300 &&
+        mouseY >= this.y - 150 &&
+        mouseY <= this.y + 150
+      ) {
+        return true;
+      }
     }
   }
   click() {
@@ -1035,13 +1286,19 @@ class selectBox {
       ) {
         if (this.selection == 0) {
           scene = 18;
+          if (secondending) {
+            endingsong2.stop();
+            endingsong.play();
+          }
         } else {
           scene = 23;
+          endingsong.stop();
+          endingsong2.play();
         }
         console.log(this.selection);
         selectionOn == false;
         text_index = 0;
-        crowOn = false;
+        crowOn = true;
         textboxOn = true;
       }
     }
@@ -1059,4 +1316,111 @@ class Prince {
       image(this.image, 960, 540);
     }
   }
+}
+class Six {
+  constructor() {}
+  insertImage(path) {
+    this.image = loadImage(path);
+  }
+  display() {
+    if (sixOn) {
+      imageMode(CENTER);
+      image(this.image, 960, 540);
+    }
+  }
+}
+
+function BackToTitle() {
+  cursor();
+  scene = 0;
+  text_index = 0;
+  textboxOn = true;
+  crowOn = false;
+  crowovercheck = true;
+  crowclicked = false;
+
+  scene2_clicked = 0;
+  scene3_clicked = 0;
+  scene4_clicked = 0;
+  scene4_lastclick_time = 0;
+  scene4_now_time = 0;
+  scene4_delta_time = 0;
+  scene4_last_time = 0;
+
+  for (key of keys) {
+    key.set(false);
+  }
+  dragon.set(0);
+
+  scene5_now_time = 0;
+  scene5_delta_time = 0;
+  scene5_end_time = 0;
+  scene5_book_clicked = 0;
+
+  bookOn = true;
+  webcamOn = false;
+  hornOn = false;
+
+  scene6_end_time = 0;
+  scene6_now_time = 0;
+  scene7_now_time = 0;
+
+  stage = 0;
+  throns_out = 0;
+
+  for (let thron of throns) {
+    thron.mouseovered = 0;
+  }
+  GI_clicked = false;
+  cleartext_clicked = false;
+  clear = false;
+  GO_clicked = true;
+
+  snake_done = false;
+  scoreElem = 0;
+  updateFruitCoordinates();
+  numSegments = 10;
+  xCor = [];
+  yCor = [];
+  for (let i = 0; i < numSegments; i++) {
+    xCor.push(xStart + i * diff);
+    yCor.push(yStart);
+
+    console.log(xCor, yCor);
+  }
+
+  dragon_hate = false;
+  dragon_done = false;
+  dragon_eat = 0;
+
+  scene12_clicked = 0;
+  key_video_startTime = 9999999999999999;
+  scene12_Timenow = 0;
+
+  scene14_now_time = 0;
+  scene14_last_time = 0;
+  scene14_clicked = 0;
+  scene15_now_time = 0;
+  clapOn = true;
+  mic_w = 0;
+  mic_overed = 0;
+
+  sleep_stage = 0;
+  princessOn = true;
+  selectionOn = false;
+  secondending = false;
+  scene18_end_time = 0;
+  scene18_now_time = 0;
+
+  scene19_now_time = 0;
+  ending_book_clicked_time = 0;
+  scene23_now_time = 0;
+  scene24_now_time = 0;
+  princeOn = false;
+  sixOn = false;
+
+  openingsong.play();
+  gamesong.stop();
+  endingsong2.stop();
+  endingsong.stop();
 }
