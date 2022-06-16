@@ -41,6 +41,7 @@ let texts_5 = [
     text: "이게 뭐야~!!!!!!!!!!!!!!!!!!!!!",
     click_reaction: "textoff",
     text_who: "말레피센트",
+    effect: "bold",
   },
 ];
 
@@ -75,10 +76,11 @@ let texts_7 = [
     click_reaction: "next",
     text_who: "디아블로",
   },
-   {
+  {
     text: "왕자가 너를 쫓고 있어. 이대로 붙잡힌다면 너는 죽음에 이르고 말 거야.",
     click_reaction: "next",
     text_who: "디아블로",
+    effect: "red",
   },
   {
     text: "저... 저 아직 정문기입 팀플 완성 못했는데요. 벌써 죽으면 안 되는데...",
@@ -90,10 +92,11 @@ let texts_7 = [
     click_reaction: "next",
     text_who: "디아블로",
   },
-    {
+  {
     text: "하지만 지금 성문을 여는 열쇠는 세 개로 조각난 상태야. 너는 총 세 번의 관문을 통과해야 한다는 뜻이지.",
     click_reaction: "next",
     text_who: "디아블로",
+    effect: "red",
   },
   {
     text: "일단 해보겠습니다...",
@@ -262,7 +265,7 @@ let texts_17 = [
   },
   {
     text: "...? 말레피센트, 혹시 무슨 문제라도?",
-    click_reaction: "next",
+    click_reaction: "crowon",
     text_who: "오로라",
   },
   {
@@ -371,7 +374,16 @@ let texts_19 = [
     click_reaction: "textoff",
     text_who: "나",
   },
-  0,
+  {
+    text: "정말 원래 세계로 돌아왔네.",
+    click_reaction: "next",
+    text_who: "나",
+  },
+  {
+    text: "재미있는 이야기였어!",
+    click_reaction: "textoff",
+    text_who: "나",
+  },
 ];
 let texts_23 = [
   {
@@ -404,7 +416,8 @@ let texts_24 = [
   },
   {
     text: "앗, 시작한다.",
-    click_reaction: "next",
+    click_reaction: "sixon",
+    // 만약 육종환 이미지 넣으면 여기 수정하기
     text_who: "말레피센트",
   },
   {
@@ -422,22 +435,22 @@ let texts_24 = [
     click_reaction: "next",
     text_who: "오로라",
   },
-    {
+  {
     text: "호우~~ 잘 어울린다~~",
     click_reaction: "next",
     text_who: "말레피센트",
   },
-    {
+  {
     text: "(그나저나 5년이면 정말 시간이 많이 흘렀지. 그동안 참 재밌었지만...)",
     click_reaction: "next",
     text_who: "말레피센트",
   },
-    {
+  {
     text: "내가 이곳에 남으려 했던 이유는 오로라와 함께하기 위함이었잖아. 이제 오로라에게는 왕자가 있으니, 더이상 여기 있을 이유가 없네.",
     click_reaction: "next",
     text_who: "말레피센트",
   },
-   {
+  {
     text: "디아블로! 언제든 돌아가게 해 준다는 약속, 아직 유효하죠?",
     click_reaction: "crowon",
     text_who: "말레피센트",
@@ -457,7 +470,7 @@ let texts_24 = [
     click_reaction: "next",
     text_who: "말레피센트",
   },
-    {
+  {
     text: "저도 졸업은 해야죠.",
     click_reaction: "next",
     text_who: "말레피센트",
@@ -472,7 +485,7 @@ let texts_24 = [
     click_reaction: "next",
     text_who: "디아블로",
   },
-   {
+  {
     text: "자, 이제 돌아갈까요?",
     click_reaction: "textoff",
     text_who: "디아블로",
@@ -522,7 +535,7 @@ let gi_texts_0 = [
   "이걸 치우지 않으면 앞으로 갈 수 없겠어…",
 ];
 let gi_texts_1 = [
-  "다리가 무너져 앞으로 갈 수 없다.\n키보드 방향키를 조작해 돌덩이를 모으자.\n꼬리에 닿거나 화면 밖으로 나가면 모은 돌을 잃게 되니 주의하자.",
+  "다리가 무너져 앞으로 갈 수 없다.\n스네이크 게임처럼 키보드 방향키를 조작해 돌덩이를 모으자.\n꼬리에 닿거나 화면 밖으로 나가면 모은 돌을 잃게 되니 주의하자.",
   "이 다리를 건너야 성으로 갈 수 있는데...",
 ];
 let gi_texts_2 = [
