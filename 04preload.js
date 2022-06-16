@@ -6,24 +6,20 @@ function preload() {
 
   //musics
   //songs
-  /*
-   titlesong = loadSound('assets/titlemusic.mp3');
-  
-  dreamsound0 = loadSound('assets/dream0.mp3');
-  dreamsound1 = loadSound('assets/dream1.mp3');
-  dreamsound2 = loadSound('assets/dream2.mp3');
-  
-   booksound = loadSound('assets/booksound.mp3');
-  
-   openingsong = loadSound('assets/openingmusic.mp3');
-   gamesong = loadSound('assets/gamemusic.mp3');
-   endingsong = loadSound('assets/endingmusic.mp3');
-   endingsong2 = loadSound('assets/endingmusic2.mp3');
-*/
+  titlesong = loadSound("assets/titlemusic.mp3");
+  dreamsound0 = loadSound("assets/dream0.mp3");
+  dreamsound1 = loadSound("assets/dream1.mp3");
+  dreamsound2 = loadSound("assets/dream2.mp3");
+  booksound = loadSound("assets/booksound.mp3");
+  openingsong = loadSound("assets/openingmusic.mp3");
+  gamesong = loadSound("assets/gamemusic.mp3");
+  endingsong = loadSound("assets/endingmusic.mp3");
+  endingsong2 = loadSound("assets/weddingmusic.mp3");
 
   // scene 0
   bI_0.insertImage("assets/title.png");
   titlestartbutton.insertImage("assets/start.png");
+  titlestartbutton.insertOverImage("assets/start.png");
   // scene 1
   textbox.insertImage("assets/messageBox.png");
 
@@ -35,19 +31,27 @@ function preload() {
   bI_4.insertImage("assets/dream2.png");
   // scene 5
   book.insertImage("assets/book_closeup.png");
+  book.insertOverImage("assets/book_closeup.png");
   horn.insertImage("assets/horn.png");
   // scene 6
   bI_6.insertImage("assets/book_open.png");
   // scene 7
   bI_7.insertImage("assets/stage0.png");
   crow.insertImage("assets/crow.png");
+  crow.insertOverImage("assets/crowover.png");
 
   // scene 8
   for (let i = 0; i < 4; i++) {
     map_images[i] = loadImage("assets/map" + i + ".png");
   }
+  for (let i = 0; i < 4; i++) {
+    map_over_images[i] = loadImage("assets/mapover" + i + ".png");
+  }
   for (let i = 0; i < 6; i++) {
     key_images[i] = loadImage("assets/key" + i + ".png");
+  }
+  for (let i = 0; i < 3; i++) {
+    key_over_images[i] = loadImage("assets/key" + i * 2 + "over.png");
   }
   princemap.insertImage("assets/princeicon.png");
 
@@ -92,14 +96,15 @@ function preload() {
 
   // scene 14
   bI_14.insertImage("assets/castle.png");
-  lock.insertImage("assets/keyBox.png");
-  keycursor.insertImage("assets/key1.png");
+  lock.insertImage("assets/lock.png");
+  lock.insertOverImage("assets/lockover.png");
+  keycursor.insertImage("assets/keywhole.png");
 
   // scene 15
   bI_15.insertImage("assets/room.png");
   // scene 16
   bI_16.insertImage("assets/stage2.png");
-  clap.insertImage("assets/speaker.png");
+  clap.insertImage("assets/clap.png");
   for (let i = 0; i < 4; i++) {
     sleepprincess_images[i] = loadImage("assets/sleep" + i + ".png");
   }
@@ -108,12 +113,15 @@ function preload() {
   princess.insertImage("assets/princess.png");
 
   selectbox0.insertImage("assets/ending_b1.png");
+  selectbox0.insertOverImage("assets/ending_over_b1.png");
   selectbox1.insertImage("assets/ending_b2.png");
+  selectbox1.insertOverImage("assets/ending_over_b2.png");
 
   // scene 18
   bI_18.insertImage("assets/room_p.png");
   // scene 19
   ending_book.insertImage("assets/ending1.png");
+  ending_book.insertOverImage("assets/ending1.png");
   // scene 20
   bI_20.insertImage("assets/theEnd.png");
   // scene 21
@@ -123,5 +131,6 @@ function preload() {
   // scene 24
   bI_24.insertImage("assets/wedding.jpeg");
   prince.insertImage("assets/prince.png");
+  six.insertImage("assets/six.png");
   wedprincess.insertImage("assets/princess_wed.png");
 }
