@@ -1,4 +1,4 @@
-let scene = 0;
+let scene = 12;
 //fonts
 let font1;
 // video
@@ -205,6 +205,8 @@ let scene18_end_time = 0;
 let scene18_now_time = 0;
 let bI_18 = new backgroundImage();
 // scene 19
+let endingHornOff = false;
+let scene19_hornoff = 0;
 let scene19_now_time = 0;
 let ending_book_clicked_time = 0;
 let ending_book = new EndingBook();

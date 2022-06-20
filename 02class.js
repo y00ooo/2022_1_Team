@@ -119,11 +119,11 @@ class textBox {
         switch (this.text.click_reaction) {
           case "next":
             text_index++;
-            console.log(" 01 text next");
+            // console.log(" 01 text next");
             break;
           case "textoff":
             if (text_index == texts[scene].length - 1) {
-              console.log("textoff");
+              // console.log("textoff");
               if (scene == 5) {
                 if (scene5_end_time == 0) {
                   scene5_end_time = millis();
@@ -155,7 +155,7 @@ class textBox {
             } else {
               textboxOn = false;
               text_index++;
-              console.log("textbox clicked " + text_index);
+              // console.log("textbox clicked " + text_index);
 
               if (scene == 5 && text_index == 4) {
                 textboxOn = true;
@@ -166,7 +166,7 @@ class textBox {
               }
               if (scene == 16 || scene == 23) {
                 selectionOn = false;
-                console.log("special");
+                // console.log("special");
                 textboxOn = true;
                 text_index = 0;
                 scene++;
@@ -178,10 +178,10 @@ class textBox {
             }
             break;
           case "crowon":
-            console.log("crow on text", text_index);
+            // console.log("crow on text", text_index);
             crowOn = true;
 
-            console.log("crow on click");
+            // console.log("crow on click");
             if (scene == 15 || scene == 17 || scene == 24) {
               textboxOn = true;
               if (scene == 17 || scene == 24) {
@@ -199,13 +199,13 @@ class textBox {
 
             break;
           case "princeon":
-            console.log("textclicked");
+            // console.log("textclicked");
             sixOn = false;
             princeOn = true;
             text_index++;
             break;
           case "princesson":
-            console.log("textclicked");
+            // console.log("textclicked");
             // scene 24만 고려
             princeOn = false;
             princessOn = true;
@@ -215,7 +215,6 @@ class textBox {
             sixOn = true;
             text_index++;
             break;
-            
         }
       }
     }
@@ -269,7 +268,7 @@ class Book {
         if (scene == 5 && text_index == 3 && textboxOn == false) {
           scene5_book_clicked++;
           webcamOn = true;
-          console.log(scene5_book_clicked);
+          // console.log(scene5_book_clicked);
           if (scene5_book_clicked == 1) {
             hornOn = true;
             textboxOn = true;
@@ -293,7 +292,6 @@ class EndingBook {
     this.y = 540;
     this.w = 1920;
     this.h = 1080;
-
     if (bookOn) {
       if (this.over()) {
         imageMode(CENTER);
@@ -325,8 +323,9 @@ class EndingBook {
         mouseY <= 540 + 400
       ) {
         if (scene == 19 && text_index == 2 && textboxOn == false) {
-          console.log("a");
-          hornOn = false;
+          endingHornOff = true;
+          scene19_hornoff = millis();
+          // hornOn = false;
           textboxOn = true;
         }
       }
@@ -377,6 +376,7 @@ class Horn {
       let ypoint = (LearY + RearY) / 2;
       // 뿔 좌표 조정하는 거 어려움 ㅠㅠ
       // 얼굴 따라 방향 바뀌는 거?
+
       image(
         this.image,
         xpoint - 30,
@@ -384,6 +384,7 @@ class Horn {
         10 * dist(LearX, LearY, RearX, RearY),
         20 * dist(LeyeX, LeyeY, xpoint, LearY)
       );
+
       pop();
     }
   }
@@ -467,8 +468,8 @@ class Crow {
           textboxOn = true;
           text_index++;
 
-          console.log("crow clicked and ", text_index);
-          console.log("2 crow clicked!!!!");
+          // console.log("crow clicked and ", text_index);
+          // console.log("2 crow clicked!!!!");
         }
       }
     }
@@ -515,7 +516,7 @@ class Mark {
     if (stage == this.stage) {
       if (dist(mouseX, mouseY, this.x, this.y) <= 190) {
         this.overed = true;
-        console.log("overed");
+        // console.log("overed");
         return true;
       }
     }
@@ -1085,7 +1086,7 @@ class FoodButton {
         if (this.food_num == right_food[dragon_eat]) {
           dragon_eat++;
           dragon.set(dragon_eat);
-          console.log("먹음" + dragon_eat);
+          // console.log("먹음" + dragon_eat);
           dragon_hate = false;
         } else {
           // 잘못 줬을 때 반응
@@ -1093,12 +1094,12 @@ class FoodButton {
           if (dragon_eat >= 1) {
             dragon_eat--;
             dragon.set(dragon_eat);
-            console.log("뱉음" + dragon_eat);
+            // console.log("뱉음" + dragon_eat);
           }
         }
         if (dragon_eat >= 3) {
           dragon_done = true;
-          console.log("다 먹음");
+          // console.log("다 먹음");
         }
       }
     }
@@ -1219,7 +1220,7 @@ function checkmic() {
 
   if (mic_w >= 250) {
     mic_overed++;
-    console.log(mic_overed);
+    // console.log(mic_overed);
   }
 
   if (mic_overed == 5) {
@@ -1295,7 +1296,7 @@ class selectBox {
           endingsong.stop();
           endingsong2.play();
         }
-        console.log(this.selection);
+        // console.log(this.selection);
         selectionOn == false;
         text_index = 0;
         crowOn = true;
@@ -1347,7 +1348,7 @@ function BackToTitle() {
   scene4_delta_time = 0;
   scene4_last_time = 0;
 
-  for (key of keys) {
+  for (let key of keys) {
     key.set(false);
   }
   dragon.set(0);
@@ -1386,7 +1387,7 @@ function BackToTitle() {
     xCor.push(xStart + i * diff);
     yCor.push(yStart);
 
-    console.log(xCor, yCor);
+    // console.log(xCor, yCor);
   }
 
   dragon_hate = false;
@@ -1411,7 +1412,8 @@ function BackToTitle() {
   secondending = false;
   scene18_end_time = 0;
   scene18_now_time = 0;
-
+  endingHornOff = false;
+  scene19_hornoff = 0;
   scene19_now_time = 0;
   ending_book_clicked_time = 0;
   scene23_now_time = 0;
@@ -1419,8 +1421,11 @@ function BackToTitle() {
   princeOn = false;
   sixOn = false;
 
-  openingsong.play();
+  titlesong.stop();
+  openingsong.stop();
   gamesong.stop();
   endingsong2.stop();
   endingsong.stop();
+
+  titlesong.play();
 }

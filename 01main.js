@@ -8,7 +8,7 @@ function setup() {
   for (let i = 0; i < numSegments; i++) {
     xCor.push(xStart + i * diff);
     yCor.push(yStart);
-    console.log(xCor, yCor);
+    // console.log(xCor, yCor);
   }
 
   // scene 16
@@ -18,7 +18,7 @@ function setup() {
   key_video = createVideo(["assets/key_ani.mp4"]);
   key_video.hide();
 
-  titlesong.play();
+  // titlesong.play();
 }
 
 function draw() {
@@ -207,7 +207,7 @@ function draw() {
             gridSize,
             gridSize
           );
-          console.log(xCor, yCor);
+          // console.log(xCor, yCor);
 
           updateSnakeCoordinates();
           checkGameStatus();
@@ -269,12 +269,14 @@ function draw() {
     case 13:
       bI_12.display();
       lock.display();
-      if (millis() <= key_video_startTime + 1650) {
+      if (millis() <= key_video_startTime + 1670) {
         imageMode(CENTER);
         image(key_video, 960, 540);
       } else {
+        key_video.pause();
         scene++;
         textboxOn = true;
+        
       }
       // bI_13.display();
       break;
@@ -355,8 +357,19 @@ function draw() {
       background(0);
       ending_book.display();
       webcam.display(825, 595, 260);
-      horn.display();
+
       textbox.display();
+
+      if (endingHornOff) {
+        let scene19_deltatime = scene19_now_time - scene19_hornoff;
+        tint(255, 255 - scene19_deltatime / 5);
+        // console.log(scene19_deltatime / 10);
+        if (scene19_deltatime / 5 >= 255) {
+          hornOn = false;
+        }
+      }
+      horn.display();
+      noTint();
 
       if (scene19_now_time <= scene18_now_time + 3000) {
         rectMode(CORNER);
@@ -542,12 +555,12 @@ function mouseClicked() {
     case 12:
       textbox.click();
       scene12_clicked++;
-      console.log(scene12_clicked);
+      // console.log(scene12_clicked);
 
       if (scene12_clicked >= 2) {
         key_video.loop();
         key_video_startTime = millis();
-        console.log(key_video_startTime);
+        // console.log(key_video_startTime);
       }
 
       break;
@@ -585,10 +598,13 @@ function mouseClicked() {
       break;
     case 19:
       if (scene19_now_time > scene18_now_time + 3000) {
-        let phornOn = hornOn;
+        let pendinghornoff = endingHornOff;
+
         ending_book.click();
-        if (phornOn == hornOn) {
+
+        if (pendinghornoff == endingHornOff) {
           textbox.click();
+          // console.log("clicked");
         }
       }
 
