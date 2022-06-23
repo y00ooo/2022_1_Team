@@ -1,4 +1,4 @@
-let scene = 12;
+let scene = 0;
 //fonts
 let font1;
 // video
